@@ -39,6 +39,7 @@ export class FormioBaseComponent implements OnInit, OnChanges, OnDestroy {
   @Output() nextPage = new EventEmitter<object>();
   @Output() beforeSubmit = new EventEmitter<object>();
   @Output() change = new EventEmitter<object>();
+  @Output() componentChange = new EventEmitter<object>();
   @Output() invalid = new EventEmitter<boolean>();
   @Output() errorChange = new EventEmitter<any>();
   @Output() formLoad = new EventEmitter<any>();
@@ -131,6 +132,7 @@ export class FormioBaseComponent implements OnInit, OnChanges, OnDestroy {
     this.formio.on('prevPage', (data: any) => this.ngZone.run(() => this.onPrevPage(data)));
     this.formio.on('nextPage', (data: any) => this.ngZone.run(() => this.onNextPage(data)));
     this.formio.on('change', (value: any, flags: any, isModified: boolean) => this.ngZone.run(() => this.onChange(value, flags, isModified)));
+    this.formio.on('componentChange', (value: any, flags: any, isModified: boolean) => this.ngZone.run(() => this.onComponentChange(value, flags, isModified)));
     this.formio.on('customEvent', (event: any) =>
       this.ngZone.run(() => this.customEvent.emit(event))
     );
@@ -495,5 +497,9 @@ export class FormioBaseComponent implements OnInit, OnChanges, OnDestroy {
       }
     }
     return this.change.emit({...value, flags, isModified});
+  }
+  
+  onComponentChange(value: any, flags: any, isModified: boolean) {
+    return this.componentChange.emit({...value, flags, isModified});
   }
 }
